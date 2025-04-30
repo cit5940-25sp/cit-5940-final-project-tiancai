@@ -1,11 +1,12 @@
-package othello.gamelogic;
+package othello.ai;
 
 import ai.onnxruntime.*;
+import othello.gamelogic.BoardSpace;
+import othello.gamelogic.Player;
+import othello.ai.AIStrategy;
 
 import java.util.Map;
 public class NeuralNetworkStrategy implements AIStrategy {
-
-
 
     private static OrtEnvironment env;
     private static OrtSession session;

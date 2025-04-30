@@ -10,4 +10,6 @@ module othello {
     opens othello.gui to javafx.fxml;
     exports othello.gamelogic;
     opens othello.gamelogic to javafx.fxml;
+    exports othello.ai;
+    opens othello.ai to javafx.fxml;
 }

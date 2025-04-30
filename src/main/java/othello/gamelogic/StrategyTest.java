@@ -1,6 +1,8 @@
 
 package othello.gamelogic;
 
+import othello.ai.NeuralNetworkStrategy;
+
 public class StrategyTest {
     public static void main(String[] args) throws Exception {
         // 创建棋盘
