@@ -33,6 +33,59 @@ public abstract class Player {
      * @return a map with a destination BoardSpace mapped to a List of origin BoardSpaces.
      */
     public Map<BoardSpace, List<BoardSpace>> getAvailableMoves(BoardSpace[][] board) {
-        return null;
+        Map<BoardSpace, List<BoardSpace>> result = new HashMap<>();
+        BoardSpace.SpaceType myColor = getColor();
+        BoardSpace.SpaceType oppColor = getOpponentColor();
+
+        int[][] directions = {
+                {-1, -1}, {-1, 0}, {-1, 1},
+                {0, -1},           {0, 1},
+                {1, -1}, {1, 0},  {1, 1}
+        };
+
+        for (BoardSpace origin : playerOwnedSpaces) {
+            int x = origin.getX();
+            int y = origin.getY();
+
+            for (int[] dir : directions) {
+                int dx = dir[0];
+                int dy = dir[1];
+                int nx = x + dx;
+                int ny = y + dy;
+
+                //check boundary and neighbor is opponent,
+                if (!inBounds(nx, ny, board)) continue;
+                if (board[nx][ny].getType() != oppColor) continue;
+
+                //walk until find empty or out of boundary
+                while (true) {
+                    nx += dx;
+                    ny += dy;
+                    if (!inBounds(nx, ny, board)) break;
+                    BoardSpace current = board[nx][ny];
+                    if (current.getType() == BoardSpace.SpaceType.EMPTY) {
+                        // record to hash map
+                        result.computeIfAbsent(current, k -> new ArrayList<>()).add(origin);
+                        break;
+                    } else if (current.getType() == myColor) {
+                        // illegal if already occupied by yourself
+                        break;
+                    }
+                    //continue looping if still oppo space.
+                }
+            }
+        }
+        return result;
     }
+
+    private boolean inBounds(int x, int y, BoardSpace[][] board) {
+        return x >= 0 && x < board.length && y >= 0 && y < board[0].length;
+    }
+
+    private BoardSpace.SpaceType getOpponentColor() {
+        return getColor() == BoardSpace.SpaceType.BLACK
+                ? BoardSpace.SpaceType.WHITE
+                : BoardSpace.SpaceType.BLACK;
+    }
+
 }
