@@ -5,21 +5,23 @@ package othello.gamelogic;
  * Employs a specific computer strategy passed in through program arguments.
  */
 public class ComputerPlayer extends Player {
-    private final AIStrategy strategy;
+    private AIStrategy strategy;
+
+
     public ComputerPlayer(String strategyName) {
         // PART 2
         // TODO: Use the strategyName input to create a specific strategy class for this computer
         // This input should match the ones specified in App.java!
         switch (strategyName.replaceAll("\\s+", "").toLowerCase()) {
-                break;
             case "expectedmax":
-                this.strategy = new ExpectedmaxStrategy();
+                //this.strategy = new ExpectedmaxStrategy();
                 break;
             case "minimax":
-                this.strategy = new MinimaxStrategy();
+                //this.strategy = new MinimaxStrategy();
                 break;
             case "cnn":
                 this.strategy = new NeuralNetworkStrategy();
+                break;
             default:
                 throw new IllegalArgumentException("Unknown strategy: " + strategyName);
         }

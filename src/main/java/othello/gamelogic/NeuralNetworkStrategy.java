@@ -1,44 +1,70 @@
 package othello.gamelogic;
 
+import ai.onnxruntime.*;
+
+import java.util.Map;
 public class NeuralNetworkStrategy implements AIStrategy {
 
 
 
-    public BoardSpace chooseMove(BoardSpace[][] board, Player self, Player opponent) {
-        // 1. get input：float[8][8]
-        float[][] boardInput = new float[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                BoardSpace s = board[i][j];
-                if (s.getType() == self.getColor()) {
-                    boardInput[i][j] = 1f;
-                }
-            }
-        }
+    private static OrtEnvironment env;
+    private static OrtSession session;
 
+    static {
         try {
-            float[] probs = predictor.predictMoveProbabilities(boardInput);
-            Map<BoardSpace, List<BoardSpace>> availableMoves = self.getAvailableMoves(board);
+            env = OrtEnvironment.getEnvironment();
+            session = env.createSession("Othello.onnx", new OrtSession.SessionOptions());
+        } catch (OrtException e) {
+            e.printStackTrace();
+        }
+    }
 
-            BoardSpace best = null;
-            float bestProb = -1f;
+    @Override
+    public BoardSpace chooseMove(BoardSpace[][] board, Player self, Player opponent) {
+        try {
+            float[][][][] input = new float[1][1][board.length][board[0].length];
 
-            for (BoardSpace move : availableMoves.keySet()) {
-                int index = move.getX() * 8 + move.getY();
-                if (probs[index] > bestProb) {
-                    bestProb = probs[index];
-                    best = move;
+            // input
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (board[i][j].getType() == self.getColor()) {
+                        input[0][0][i][j] = 1.0f;
+                    } else if (board[i][j].getType() == opponent.getColor()) {
+                        input[0][0][i][j] = -1.0f;
+                    } else {
+                        input[0][0][i][j] = 0.0f;
+                    }
                 }
             }
 
-            return best;
-        } catch (OrtException e) {
+            // predict
+            OnnxTensor inputTensor = OnnxTensor.createTensor(env, input);
+            Map<String, OnnxTensor> inputs = Map.of("board_in", inputTensor);
+            OrtSession.Result result = session.run(inputs);
+
+            float[][] bestMoveScores = (float[][]) result.get(0).getValue(); // [1][65]
+
+            // optimized
+            int bestIndex = 0;
+            float maxScore = bestMoveScores[0][0];
+            for (int i = 1; i < 65; i++) {
+                if (bestMoveScores[0][i] > maxScore) {
+                    maxScore = bestMoveScores[0][i];
+                    bestIndex = i;
+                }
+            }
+
+            // if pass pass
+            if (bestIndex == 64) return null;
+
+            int row = bestIndex / 8;
+            int col = bestIndex % 8;
+            return board[row][col];
+
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public void close() throws OrtException {
-        predictor.close();
-    }
 }
