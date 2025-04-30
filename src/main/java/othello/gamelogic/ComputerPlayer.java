@@ -19,7 +19,7 @@ public class ComputerPlayer extends Player {
                 this.strategy = new MinimaxStrategy();
                 break;
             case "cnn":
-                this.strategy = new CNNStrategy();
+                this.strategy = new NeuralNetworkStrategy();
             default:
                 throw new IllegalArgumentException("Unknown strategy: " + strategyName);
         }

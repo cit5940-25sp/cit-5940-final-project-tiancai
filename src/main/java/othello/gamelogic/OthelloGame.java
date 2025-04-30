@@ -46,8 +46,17 @@ public class OthelloGame {
      */
     public void initBoard() {
         board = new BoardSpace[GAME_BOARD_SIZE][GAME_BOARD_SIZE];
+        int mid1 = GAME_BOARD_SIZE / 2;
+        int mid2 = (GAME_BOARD_SIZE-1) / 2;
         for (int i = 0; i < GAME_BOARD_SIZE; i++) {
             for (int j = 0; j < GAME_BOARD_SIZE; j++) {
+                if ((i == mid1 && j == mid1)
+                        || (i == mid2 && j == mid2 )) {
+                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.BLACK);
+                } else if ((i == mid1 && j == mid2)
+                        || (i == mid2 && j == mid1 )) {
+                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.WHITE);
+                }
                 board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
             }
         }
