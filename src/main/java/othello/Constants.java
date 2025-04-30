@@ -1,4 +1,4 @@
-package othello;
+package othello.gui;
 
 public class Constants {
     public static final int[][] BOARD_WEIGHTS =

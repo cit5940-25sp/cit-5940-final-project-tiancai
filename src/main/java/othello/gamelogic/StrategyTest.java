@@ -1,4 +1,3 @@
-
 package othello.gamelogic;
 
 import othello.ai.NeuralNetworkStrategy;
