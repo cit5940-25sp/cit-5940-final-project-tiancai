@@ -17,6 +17,22 @@ public class OthelloGame {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         initBoard();
+
+        // PlayerOne is BLACK, PlayerTwo is WHITE
+        // mid indices:
+        int mid1 = GAME_BOARD_SIZE/2, mid2 = mid1 - 1;
+
+        // center Black discs at (mid2,mid1) and (mid1,mid2)
+        BoardSpace b1 = board[mid2][mid1];
+        BoardSpace b2 = board[mid1][mid2];
+        playerOne.getPlayerOwnedSpacesSpaces().add(b1);
+        playerOne.getPlayerOwnedSpacesSpaces().add(b2);
+
+        // center White discs at (mid2,mid2) and (mid1,mid1)
+        BoardSpace w1 = board[mid2][mid2];
+        BoardSpace w2 = board[mid1][mid1];
+        playerTwo.getPlayerOwnedSpacesSpaces().add(w1);
+        playerTwo.getPlayerOwnedSpacesSpaces().add(w2);
     }
 
     public BoardSpace[][] getBoard() {
@@ -46,18 +62,20 @@ public class OthelloGame {
      */
     public void initBoard() {
         board = new BoardSpace[GAME_BOARD_SIZE][GAME_BOARD_SIZE];
-        int mid1 = GAME_BOARD_SIZE / 2;
-        int mid2 = (GAME_BOARD_SIZE-1) / 2;
+        int mid1 = GAME_BOARD_SIZE/2;       // 4
+        int mid2 = mid1 - 1;                // 3
+
         for (int i = 0; i < GAME_BOARD_SIZE; i++) {
             for (int j = 0; j < GAME_BOARD_SIZE; j++) {
-                if ((i == mid1 && j == mid1)
-                        || (i == mid2 && j == mid2 )) {
-                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.BLACK);
-                } else if ((i == mid1 && j == mid2)
-                        || (i == mid2 && j == mid1 )) {
+                if ((i == mid2 && j == mid2) || (i == mid1 && j == mid1)) {
+                    // top‑left and bottom‑right of center are WHITE
                     board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.WHITE);
+                } else if ((i == mid2 && j == mid1) || (i == mid1 && j == mid2)) {
+                    // top‑right and bottom‑left of center are BLACK
+                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.BLACK);
+                } else {
+                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
                 }
-                board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
             }
         }
     }
@@ -155,8 +173,9 @@ public class OthelloGame {
      * @return the BoardSpace that was decided upon
      */
     public BoardSpace computerDecision(ComputerPlayer computer) {
-
-        return null;
+        Player opponent = (computer == playerOne ? playerTwo : playerOne);
+        // delegate to ComputerPlayer.chooseMove(...)
+        return computer.chooseMove(board, opponent);
     }
 
 }
