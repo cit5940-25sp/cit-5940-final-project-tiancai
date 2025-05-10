@@ -23,7 +23,7 @@ public class ComputerPlayer extends Player{
             case "mcts":
                 this.strategy = new MCTS();
                 break;
-            case "custom":
+            case "cnn":
                 // your third algorithm; here we use the NN you wrote
                 this.strategy = new NeuralNetworkStrategy();
                 break;

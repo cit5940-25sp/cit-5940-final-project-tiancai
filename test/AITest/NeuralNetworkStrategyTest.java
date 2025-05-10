@@ -1,8 +1,12 @@
-package othello.gamelogic;
+package AITest;
 
 import othello.ai.NeuralNetworkStrategy;
+import othello.gamelogic.BoardSpace;
+import othello.gamelogic.ComputerPlayer;
+import othello.gamelogic.HumanPlayer;
+import othello.gamelogic.Player;
 
-public class StrategyTest {
+public class NeuralNetworkStrategyTest {
     public static void main(String[] args) throws Exception {
         // 创建棋盘
         BoardSpace[][] board = new BoardSpace[8][8];
