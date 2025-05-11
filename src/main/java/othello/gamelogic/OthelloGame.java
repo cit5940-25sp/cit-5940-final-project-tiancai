@@ -68,6 +68,7 @@ public class OthelloGame {
                 } else if ((i == mid2 && j == mid1) || (i == mid1 && j == mid2)) {
                     // top‑right and bottom‑left of center are BLACK
                     takeSpace(playerTwo, playerOne, i, j);
+
                 }
             }
         }
