@@ -16,23 +16,17 @@ public class OthelloGame {
     public OthelloGame(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+        if (playerOne.getColor().equals(playerTwo.getColor())) {
+            throw new IllegalArgumentException("Players have to have different colors");
+        }
+        if (playerOne.getColor() == null || playerTwo.getColor() == null) {
+            throw new IllegalArgumentException("Players have to choose colors");
+        }
+
         initBoard();
 
-        // PlayerOne is BLACK, PlayerTwo is WHITE
-        // mid indices:
-        int mid1 = GAME_BOARD_SIZE/2, mid2 = mid1 - 1;
 
-        // center Black discs at (mid2,mid1) and (mid1,mid2)
-        BoardSpace b1 = board[mid2][mid1];
-        BoardSpace b2 = board[mid1][mid2];
-        playerOne.getPlayerOwnedSpacesSpaces().add(b1);
-        playerOne.getPlayerOwnedSpacesSpaces().add(b2);
 
-        // center White discs at (mid2,mid2) and (mid1,mid1)
-        BoardSpace w1 = board[mid2][mid2];
-        BoardSpace w2 = board[mid1][mid1];
-        playerTwo.getPlayerOwnedSpacesSpaces().add(w1);
-        playerTwo.getPlayerOwnedSpacesSpaces().add(w2);
     }
 
     public BoardSpace[][] getBoard() {
@@ -67,14 +61,13 @@ public class OthelloGame {
 
         for (int i = 0; i < GAME_BOARD_SIZE; i++) {
             for (int j = 0; j < GAME_BOARD_SIZE; j++) {
+                board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
                 if ((i == mid2 && j == mid2) || (i == mid1 && j == mid1)) {
                     // top‑left and bottom‑right of center are WHITE
-                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.WHITE);
+                    takeSpace(playerOne, playerTwo, i, j);
                 } else if ((i == mid2 && j == mid1) || (i == mid1 && j == mid2)) {
                     // top‑right and bottom‑left of center are BLACK
-                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.BLACK);
-                } else {
-                    board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
+                    takeSpace(playerTwo, playerOne, i, j);
                 }
             }
         }
