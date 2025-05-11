@@ -3,6 +3,7 @@ package othello.ai;
 import othello.gamelogic.BoardSpace;
 import othello.gamelogic.Player;
 
+
 import java.util.*;
 
 public class MCTS implements AIStrategy {
@@ -49,29 +50,40 @@ public class MCTS implements AIStrategy {
 
     @Override
     public BoardSpace chooseMove(BoardSpace[][] board, Player self, Player opponent) {
-        BoardSpace.SpaceType playerColor = self.getColor();
-        Node root = new Node(board, null, null, playerColor);
+        BoardSpace.SpaceType me = self.getColor();
+        Node root = new Node(board, null, null, me);
+
+        // 1) Expand root with your moves immediately
+        List<BoardSpace> myMoves = getValidDestinations(board, me);
+        if (myMoves.isEmpty()) return null;           // no moves at all
+        root.expand(myMoves, me);
 
         for (int i = 0; i < MAX_ITERATIONS; i++) {
-            Node node = select(root);
-            if (node.visits == 0) {
-                boolean win = simulate(node.board, playerColor);
-                backpropagate(node, win, playerColor);
-            } else {
-                List<BoardSpace> moves = getValidDestinations(node.board, opposite(node.playerColor));
-                if (moves.isEmpty()) continue;
-                node.expand(moves, opposite(node.playerColor));
-                Node randomChild = node.children.get(random.nextInt(node.children.size()));
-                boolean win = simulate(randomChild.board, playerColor);
-                backpropagate(randomChild, win, playerColor);
+            // 2) Selection: find a leaf to explore
+            Node leaf = select(root);
+
+            // 3) Expansion: if leaf belongs to me, expand my moves; else expand opponent's
+            BoardSpace.SpaceType turn = leaf.playerColor;
+            List<BoardSpace> moves = getValidDestinations(leaf.board, turn);
+            if (!moves.isEmpty()) {
+                leaf.expand(moves, turn);
+                leaf = leaf.children.get(random.nextInt(leaf.children.size()));
             }
+
+            // 4) Simulation
+            boolean win = simulate(leaf.board, me);
+
+            // 5) Backpropagation
+            backpropagate(leaf, win, me);
         }
 
-        Node best = root.children.stream()
+        // 6) Return the child of root with the highest visit count
+        Node bestChild = root.children.stream()
                 .max(Comparator.comparingInt(n -> n.visits))
-                .orElse(null);
-        return best == null ? null : best.move;
+                .orElseThrow();
+        return bestChild.move;
     }
+
 
     private Node select(Node node) {
         while (!node.isLeaf() && !node.children.isEmpty()) {
@@ -136,16 +148,20 @@ public class MCTS implements AIStrategy {
         return copy;
     }
 
-    // Stub: replace with actual move logic later
+    //for testing
     private List<BoardSpace> getValidDestinations(BoardSpace[][] board, BoardSpace.SpaceType color) {
-        List<BoardSpace> list = new ArrayList<>();
+        DummyPlayer dummy = new DummyPlayer(color);
+
+        // Populate playerOwnedSpaces from the board
         for (BoardSpace[] row : board) {
             for (BoardSpace space : row) {
-                if (space.getType() == BoardSpace.SpaceType.EMPTY) {
-                    list.add(space);
+                if (space.getType() == color) {
+                    dummy.getPlayerOwnedSpacesSpaces().add(space);
                 }
             }
         }
-        return list;
+
+        Map<BoardSpace, List<BoardSpace>> moveMap = dummy.getAvailableMoves(board);
+        return new ArrayList<>(moveMap.keySet());
     }
 }
