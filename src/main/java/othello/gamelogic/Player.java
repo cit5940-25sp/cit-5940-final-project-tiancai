@@ -34,7 +34,6 @@ public abstract class Player {
      */
     public Map<BoardSpace, List<BoardSpace>> getAvailableMoves(BoardSpace[][] board) {
         Map<BoardSpace, List<BoardSpace>> result = new HashMap<>();
-        BoardSpace.SpaceType myColor = getColor();
         BoardSpace.SpaceType oppColor = getOpponentColor();
 
         int[][] directions = {
@@ -46,33 +45,40 @@ public abstract class Player {
         for (BoardSpace origin : playerOwnedSpaces) {
             int x = origin.getX();
             int y = origin.getY();
-
             for (int[] dir : directions) {
                 int dx = dir[0];
                 int dy = dir[1];
                 int nx = x + dx;
                 int ny = y + dy;
 
-                //check boundary and neighbor is opponent,
-                if (!inBounds(nx, ny, board)) continue;
-                if (board[nx][ny].getType() != oppColor) continue;
+                boolean hasOpponentBetween = false;
 
                 //walk until find empty or out of boundary
-                while (true) {
-                    nx += dx;
-                    ny += dy;
-                    if (!inBounds(nx, ny, board)) break;
+                while (inBounds(nx, ny, board)) {
                     BoardSpace current = board[nx][ny];
-                    if (current.getType() == BoardSpace.SpaceType.EMPTY) {
-                        // record to hash map
-                        result.computeIfAbsent(current, k -> new ArrayList<>()).add(origin);
+                    if (current.getType() == oppColor) {
+                        hasOpponentBetween = true;
+                    } else if (current.getType() == BoardSpace.SpaceType.EMPTY && hasOpponentBetween) {
+                        if (!result.containsKey(current)) {
+                            result.put(current, new ArrayList<>());
+                        }
+                        result.get(current).add(origin);
                         break;
-                    } else if (current.getType() == myColor) {
-                        // illegal if already occupied by yourself
+                    } else {
                         break;
                     }
-                    //continue looping if still oppo space.
+                    nx += dx;
+                    ny += dy;
                 }
+            }
+        }
+        for (Map.Entry<BoardSpace, List<BoardSpace>> entry : result.entrySet()) {
+            BoardSpace destination = entry.getKey();
+            List<BoardSpace> origins = entry.getValue();
+
+            System.out.printf("Move at (%d, %d):\n", destination.getX(), destination.getY());
+            for (BoardSpace origin : origins) {
+                System.out.printf("    From origin (%d, %d)\n", origin.getX(), origin.getY());
             }
         }
         return result;

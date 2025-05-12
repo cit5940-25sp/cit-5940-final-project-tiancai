@@ -134,8 +134,7 @@ public class OthelloGame {
 
         // Step 2: go through from origin → destination, flip
         List<BoardSpace> origins = availableMoves.get(selectedDestination);
-        BoardSpace.SpaceType actingColor = actingPlayer.getColor();
-        BoardSpace.SpaceType opponentColor = opponent.getColor();
+
 
         for (BoardSpace origin : origins) {
             int x0 = origin.getX();
