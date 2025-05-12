@@ -142,9 +142,9 @@ Coverage should exceed 80% for core modules (`ai` and `gamelogic`).
 
 ## 👥 Team Members
 
-* **Zihan (Hans) Wu (Testing Lead)**: Wrote and validated comprehensive unit tests covering `ai` and `gamelogic` modules.
-* **Junxiang Li (Design Lead)**: Defined class diagrams, applied Strategy and Memento patterns, and ensured clean MVC separation.
-* **Tinghao Ruan (Team Lead)**: Coordinated GitHub tasks, led integration of JavaFX UI, and managed project documentation.
+* **Zihan (Hans) Wu 
+* **Junxiang Li 
+* **Tinghao Ruan 
 
 
 ---
