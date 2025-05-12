@@ -174,4 +174,18 @@ public class OthelloGame {
         return computer.chooseMove(board, opponent);
     }
 
+    public GameMemento save() {
+        return new GameMemento(board,
+                playerOne.getPlayerOwnedSpacesSpaces(),
+                playerTwo.getPlayerOwnedSpacesSpaces());
+    }
+
+    public void restore(GameMemento m) {
+        this.board = m.getBoard();
+        playerOne.getPlayerOwnedSpacesSpaces().clear();
+        playerOne.getPlayerOwnedSpacesSpaces().addAll(m.getP1Spaces());
+        playerTwo.getPlayerOwnedSpacesSpaces().clear();
+        playerTwo.getPlayerOwnedSpacesSpaces().addAll(m.getP2Spaces());
+    }
+
 }

@@ -1,14 +1,15 @@
 package othello.gamelogic;
 
 import javafx.scene.paint.Color;
-
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Represents a logical space on the Othello Board.
  * Keeps track of coordinates and the type of the current space.
  */
-public class BoardSpace {
+public class BoardSpace implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final int x;
     private final int y;
@@ -27,38 +28,11 @@ public class BoardSpace {
         this.type = other.type;
     }
 
-    /**
-     * @return the x coordinate of this space
-     */
-    public int getX() {
-        return x;
-    }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public SpaceType getType() { return type; }
+    public void setType(SpaceType type) { this.type = type; }
 
-    /**
-     * @return the x coordinate of this space
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * @return the Space of the current tile
-     */
-    public SpaceType getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type of the tile, then adds an othello chip (circle) to the tile.
-     * @param type Space to set this space to.
-     */
-    public void setType(SpaceType type) {
-        this.type = type;
-    }
-
-    /**
-     * Two BoardSpaces are equal if they share the same coordinates.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,23 +47,27 @@ public class BoardSpace {
     }
 
     /**
-     * Represents the type of the board space, used for filling in the color of the space in the GUI
+     * Makes a deep copy of an entire 2D board.
      */
+    public static BoardSpace[][] deepCopy(BoardSpace[][] board) {
+        int n = board.length;
+        BoardSpace[][] copy = new BoardSpace[n][];
+        for (int i = 0; i < n; i++) {
+            copy[i] = new BoardSpace[board[i].length];
+            for (int j = 0; j < board[i].length; j++) {
+                copy[i][j] = new BoardSpace(board[i][j]);
+            }
+        }
+        return copy;
+    }
+
     public enum SpaceType {
         EMPTY(Color.GRAY),
         BLACK(Color.BLACK),
         WHITE(Color.WHITE);
 
         private final Color fill;
-
-        SpaceType(Color fill) {
-            this.fill = fill;
-        }
-
-        public Color fill() {
-            return fill;
-        }
+        SpaceType(Color fill) { this.fill = fill; }
+        public Color fill() { return fill; }
     }
-
-
 }
