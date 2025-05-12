@@ -1,9 +1,7 @@
 package othello.gamelogic;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import othello.gamelogic.BoardSpace.SpaceType;
 
 /**
@@ -85,6 +83,15 @@ public abstract class Player {
                     }
                 }
             }
+        }
+
+        for (Map.Entry<BoardSpace,List<BoardSpace>> e : result.entrySet()) {
+            BoardSpace dest = e.getKey();
+            List<BoardSpace> origins = e.getValue();
+            origins.sort(Comparator.comparingInt(o ->
+                    Math.abs(dest.getX() - o.getX()) +
+                            Math.abs(dest.getY() - o.getY())
+            ));
         }
 
         return result;

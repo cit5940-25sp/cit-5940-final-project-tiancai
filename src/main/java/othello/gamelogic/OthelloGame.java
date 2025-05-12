@@ -61,23 +61,27 @@ public class OthelloGame {
      */
     public void initBoard() {
         board = new BoardSpace[GAME_BOARD_SIZE][GAME_BOARD_SIZE];
-        int mid1 = GAME_BOARD_SIZE/2;       // 4
-        int mid2 = mid1 - 1;                // 3
+        int mid1 = GAME_BOARD_SIZE / 2;  // 4
+        int mid2 = mid1 - 1;             // 3
 
         for (int i = 0; i < GAME_BOARD_SIZE; i++) {
             for (int j = 0; j < GAME_BOARD_SIZE; j++) {
                 board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
-                if ((i == mid2 && j == mid2) || (i == mid1 && j == mid1)) {
-                    // top‑left and bottom‑right of center are WHITE
-                    board[i][j].setType(BoardSpace.SpaceType.WHITE);
-                    playerTwo.getPlayerOwnedSpacesSpaces().add(board[i][j]);
-                } else if ((i == mid2 && j == mid1) || (i == mid1 && j == mid2)) {
-                    // top‑right and bottom‑left of center are BLACK
-                    board[i][j].setType(BoardSpace.SpaceType.BLACK);
-                    playerOne.getPlayerOwnedSpacesSpaces().add(board[i][j]);
-                }
             }
         }
+
+        // now place the four starting discs
+        // top‑left and bottom‑right → BLACK
+        board[mid2][mid2].setType(BoardSpace.SpaceType.BLACK);
+        playerOne.getPlayerOwnedSpacesSpaces().add(board[mid2][mid2]);
+        board[mid1][mid1].setType(BoardSpace.SpaceType.BLACK);
+        playerOne.getPlayerOwnedSpacesSpaces().add(board[mid1][mid1]);
+
+        // top‑right and bottom‑left → WHITE
+        board[mid2][mid1].setType(BoardSpace.SpaceType.WHITE);
+        playerTwo.getPlayerOwnedSpacesSpaces().add(board[mid2][mid1]);
+        board[mid1][mid2].setType(BoardSpace.SpaceType.WHITE);
+        playerTwo.getPlayerOwnedSpacesSpaces().add(board[mid1][mid2]);
     }
 
     /**
