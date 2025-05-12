@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import othello.gamelogic.BoardSpace.SpaceType;
 
 /**
  * Abstract Player class for representing a player within the game.
@@ -34,44 +35,58 @@ public abstract class Player {
      */
     public Map<BoardSpace, List<BoardSpace>> getAvailableMoves(BoardSpace[][] board) {
         Map<BoardSpace, List<BoardSpace>> result = new HashMap<>();
-        BoardSpace.SpaceType oppColor = getOpponentColor();
+        BoardSpace.SpaceType myColor   = getColor();
+        SpaceType oppColor  = (myColor == SpaceType.BLACK
+                ? SpaceType.WHITE
+                : SpaceType.BLACK);
 
-        int[][] directions = {
-                {-1, -1}, {-1, 0}, {-1, 1},
-                {0, -1},           {0, 1},
-                {1, -1}, {1, 0},  {1, 1}
+        // all eight directions
+        int[][] dirs = {
+                {-1,-1},{-1,0},{-1,1},
+                {0,-1},       {0,1},
+                {1,-1}, {1,0}, {1,1}
         };
 
-        for (BoardSpace origin : playerOwnedSpaces) {
-            int x = origin.getX();
-            int y = origin.getY();
-            for (int[] dir : directions) {
-                int dx = dir[0];
-                int dy = dir[1];
-                int nx = x + dx;
-                int ny = y + dy;
+        // scan the *entire* board for YOUR discs
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board[x].length; y++) {
+                BoardSpace origin = board[x][y];
+                if (origin.getType() != myColor) continue;
 
-                boolean hasOpponentBetween = false;
+                // from each of your discs, march out along each direction
+                for (int[] d : dirs) {
+                    int dx = d[0], dy = d[1];
+                    int nx = x + dx, ny = y + dy;
+                    boolean seenOpponent = false;
 
-                //walk until find empty or out of boundary
-                while (inBounds(nx, ny, board)) {
-                    BoardSpace current = board[nx][ny];
-                    if (current.getType() == oppColor) {
-                        hasOpponentBetween = true;
-                    } else if (current.getType() == BoardSpace.SpaceType.EMPTY && hasOpponentBetween) {
-                        if (!result.containsKey(current)) {
-                            result.put(current, new ArrayList<>());
+                    // walk until you hit edge, your own disc, or an empty
+                    while (nx >= 0 && nx < board.length
+                            && ny >= 0 && ny < board[nx].length) {
+
+                        SpaceType t = board[nx][ny].getType();
+                        if (t == oppColor) {
+                            seenOpponent = true;
                         }
-                        result.get(current).add(origin);
-                        break;
-                    } else {
-                        break;
+                        else if (t == SpaceType.EMPTY && seenOpponent) {
+                            // found a valid move!
+                            BoardSpace dest = board[nx][ny];
+                            result.computeIfAbsent(dest, k -> new ArrayList<>())
+                                    .add(origin);
+                            break;
+                        }
+                        else {
+                            // either your own disc with no opponent in between,
+                            // or empty with no opponent in between — stop.
+                            break;
+                        }
+
+                        nx += dx;
+                        ny += dy;
                     }
-                    nx += dx;
-                    ny += dy;
                 }
             }
         }
+
         return result;
     }
 
