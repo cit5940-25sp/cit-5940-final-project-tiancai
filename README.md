@@ -26,24 +26,26 @@ Additionally, the game supports:
 
 ```
 FinalProject/
-├── src/main/java/othello/         # Core source code
-│   ├── ai/                       # AI strategies (Minimax, MCTS, NN)
-│   ├── gamelogic/                # Game rules, board, players, Memento
-│   ├── gui/                      # JavaFX controllers and views
-│   ├── io/                       # GameIO save/load utilities
-│   └── App.java                 # JavaFX application launcher
-├── src/main/resources/          # FXML layout files
-│   └── game-view.fxml           # Main UI layout
-├── src/test/java/               # Unit tests (JUnit)
-│   ├── AITest/                  # AI strategy tests
-│   ├── gamelogicTest/           # Board, game logic, Memento, I/O tests
-│   └── guiTest/                 # (future) GUI interaction tests
-├── README.md                    # Project documentation (this file)
-├── pom.xml or build.gradle      # Build and dependency configuration
-└── .gitignore                   # Ignored files
+├── src/
+│   ├── main/
+│   │   ├── java/othello/
+│   │   │   ├── ai/               # Minimax, MCTS, NeuralNetworkStrategy, etc.
+│   │   │   ├── gamelogic/        # BoardSpace, Player, OthelloGame, GameMemento, etc.
+│   │   │   ├── gui/              # GameController, GUISpace
+│   │   │   └── io/               # GameIO
+│   │   └── resources/othello/
+│   │       └── game-view.fxml    # JavaFX layout
+│   └── test/java/
+│       ├── AITest/               # MCTS, Minimax, NN strategy tests
+│       ├── gamelogicTest/        # BoardSpace, OthelloGame, Player, GameMemento tests
+│       └── IOTest/               # GameIO save/load tests
+├── README.md                     # ← this file
+├── pom.xml (or build.gradle)     # build definition
+└── .gitignore
 ```
 
 ---
+
 
 ## 📥 Dependencies
 
