@@ -16,15 +16,14 @@ public class GameMemento implements Serializable {
     public GameMemento(BoardSpace[][] origBoard,
                        List<BoardSpace> origP1,
                        List<BoardSpace> origP2) {
-        // 1) deep copy the whole board
+        // deep‐copy the board
         this.board = BoardSpace.deepCopy(origBoard);
 
-        // 2) for each original owned‐space, pick the clone in the new board
+        // rebind owned‐spaces into the new copy
         this.p1Spaces = new ArrayList<>(origP1.size());
         for (BoardSpace bs : origP1) {
             this.p1Spaces.add(board[bs.getX()][bs.getY()]);
         }
-
         this.p2Spaces = new ArrayList<>(origP2.size());
         for (BoardSpace bs : origP2) {
             this.p2Spaces.add(board[bs.getX()][bs.getY()]);

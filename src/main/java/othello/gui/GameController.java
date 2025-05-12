@@ -2,15 +2,22 @@ package othello.gui;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.stage.FileChooser;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import javafx.scene.shape.Circle;
-import othello.gamelogic.*;
+import othello.io.GameIO;
+import othello.gamelogic.GameMemento;
+import othello.gamelogic.OthelloGame;
+import othello.gamelogic.Player;
+import othello.gamelogic.HumanPlayer;
+import othello.gamelogic.ComputerPlayer;
+import othello.gamelogic.BoardSpace;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +27,12 @@ import java.util.Map;
 public class GameController  {
 
     // FXML Variables to manipulate UI components
+    @FXML
+    private Button saveBtn;
+
+    @FXML
+    private Button loadBtn;
+
     @FXML
     private Label turnLabel;
 
@@ -36,6 +49,55 @@ public class GameController  {
     private OthelloGame og;
     private int skippedTurns;
     private GUISpace[][] guiBoard;
+
+    /**
+     * Called automatically by FXMLLoader *after* all @FXML injections.
+     * Here we hook up our Save / Load handlers.
+     */
+    @FXML
+    private void initialize() {
+        // save current snapshot to disk
+        saveBtn.setOnAction(e -> {
+            GameMemento m = og.save();
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Save Game");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Othello Save (*.otsav)", "*.otsav"));
+            File file = chooser.showSaveDialog(gameBoard.getScene().getWindow());
+            if (file != null) {
+                try {
+                    GameIO.saveToFile(m, file.toPath());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    // TODO: show user-friendly alert
+                }
+            }
+        });
+
+        // load a snapshot from disk
+        loadBtn.setOnAction(e -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Load Game");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Othello Save (*.otsav)", "*.otsav"));
+            File file = chooser.showOpenDialog(gameBoard.getScene().getWindow());
+            if (file != null) {
+                try {
+                    GameMemento m = GameIO.loadFromFile(file.toPath());
+                    og.restore(m);
+                    // redraw board and pieces
+                    clearBoard();
+                    displayBoard();
+                    // reset turn display; you may want to track whose turn in the memento too
+                    turnText(og.getPlayerOne());
+                    takeTurn(og.getPlayerOne());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    // TODO: show user-friendly alert
+                }
+            }
+        });
+    }
 
     /**
      * Starts the game, called after controller initialization  in start method of App.

@@ -2,39 +2,67 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="othello.gui.GameController">
+<BorderPane prefHeight="600.0" prefWidth="960.0"
+            xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="othello.gui.GameController">
+
    <left>
       <BorderPane prefHeight="600.0" prefWidth="650.0" BorderPane.alignment="CENTER">
          <center>
-            <Pane fx:id="gameBoard" maxHeight="480.0" maxWidth="480.0" prefHeight="480.0" prefWidth="480.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane prefHeight="200.0" prefWidth="61.0" />
-               </children>
+            <Pane fx:id="gameBoard"
+                  prefHeight="480.0" prefWidth="480.0"
+                  maxHeight="480.0" maxWidth="480.0"
+                  BorderPane.alignment="CENTER">
             </Pane>
          </center>
       </BorderPane>
    </left>
+
    <right>
-      <Pane prefHeight="600.0" prefWidth="310.0" style="-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 0 0 0 2;" BorderPane.alignment="CENTER">
+      <Pane prefHeight="600.0" prefWidth="310.0"
+            style="-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 0 0 0 2;"
+            BorderPane.alignment="CENTER">
          <children>
             <BorderPane prefHeight="600.0" prefWidth="310.0">
                <center>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" BorderPane.alignment="CENTER">
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0"
+                        BorderPane.alignment="CENTER">
                      <children>
-                        <Circle fx:id="turnCircle" fill="DODGERBLUE" radius="30.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label fx:id="turnLabel" contentDisplay="CENTER" text="Turn" textAlignment="CENTER" textFill="WHITE">
+                        <Circle fx:id="turnCircle"
+                                radius="30.0"
+                                stroke="BLACK"
+                                strokeType="INSIDE"
+                                fill="DODGERBLUE" />
+                        <Label fx:id="turnLabel"
+                               text="Turn"
+                               textAlignment="CENTER"
+                               textFill="WHITE"
+                               contentDisplay="CENTER">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Button fx:id="computerTurnBtn" mnemonicParsing="false" text="Take Computer Turn">
+                        <Button fx:id="computerTurnBtn"
+                                text="Take Computer Turn"
+                                mnemonicParsing="false">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Button>
+
+                        <!-- Save/Load controls -->
+                        <HBox spacing="10" alignment="CENTER">
+                           <children>
+                              <Button fx:id="saveBtn" text="Save" />
+                              <Button fx:id="loadBtn" text="Load" />
+                           </children>
+                        </HBox>
+
                      </children>
                   </VBox>
                </center>
@@ -42,4 +70,5 @@
          </children>
       </Pane>
    </right>
+
 </BorderPane>
