@@ -142,9 +142,9 @@ Coverage should exceed 80% for core modules (`ai` and `gamelogic`).
 
 ## 👥 Team Members
 
-* **Zihan (Hans) Wu 
-* **Junxiang Li 
-* **Tinghao Ruan 
+* Zihan (Hans) Wu 
+* Junxiang Li 
+* Tinghao Ruan 
 
 
 ---
