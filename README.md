@@ -25,7 +25,7 @@ Additionally, the game supports:
 ## 📂 Project Structure
 
 ```
-FinalProject/
+cit-5940-final-project-tiancai/
 ├── src/
 │   ├── main/
 │   │   ├── java/othello/
