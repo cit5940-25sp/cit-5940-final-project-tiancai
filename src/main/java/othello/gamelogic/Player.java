@@ -72,15 +72,6 @@ public abstract class Player {
                 }
             }
         }
-        for (Map.Entry<BoardSpace, List<BoardSpace>> entry : result.entrySet()) {
-            BoardSpace destination = entry.getKey();
-            List<BoardSpace> origins = entry.getValue();
-
-            System.out.printf("Move at (%d, %d):\n", destination.getX(), destination.getY());
-            for (BoardSpace origin : origins) {
-                System.out.printf("    From origin (%d, %d)\n", origin.getX(), origin.getY());
-            }
-        }
         return result;
     }
 

@@ -14,18 +14,23 @@ public class OthelloGame {
     private final Player playerTwo;
 
     public OthelloGame(Player playerOne, Player playerTwo) {
-        this.playerOne = playerOne;
-        this.playerTwo = playerTwo;
+
         if (playerOne.getColor().equals(playerTwo.getColor())) {
             throw new IllegalArgumentException("Players have to have different colors");
         }
         if (playerOne.getColor() == null || playerTwo.getColor() == null) {
             throw new IllegalArgumentException("Players have to choose colors");
         }
+        if (!playerOne.getColor().equals(BoardSpace.SpaceType.BLACK)) {
+            throw new IllegalArgumentException("Player1 have to use Black");
+        }
+        if (!playerTwo.getColor().equals(BoardSpace.SpaceType.WHITE)) {
+            throw new IllegalArgumentException("Player2 have to use White");
+        }
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
 
         initBoard();
-
-
 
     }
 
@@ -64,11 +69,12 @@ public class OthelloGame {
                 board[i][j] = new BoardSpace(i, j, BoardSpace.SpaceType.EMPTY);
                 if ((i == mid2 && j == mid2) || (i == mid1 && j == mid1)) {
                     // top‑left and bottom‑right of center are WHITE
-                    takeSpace(playerOne, playerTwo, i, j);
+                    board[i][j].setType(BoardSpace.SpaceType.WHITE);
+                    playerTwo.getPlayerOwnedSpacesSpaces().add(board[i][j]);
                 } else if ((i == mid2 && j == mid1) || (i == mid1 && j == mid2)) {
                     // top‑right and bottom‑left of center are BLACK
-                    takeSpace(playerTwo, playerOne, i, j);
-
+                    board[i][j].setType(BoardSpace.SpaceType.BLACK);
+                    playerOne.getPlayerOwnedSpacesSpaces().add(board[i][j]);
                 }
             }
         }
@@ -94,20 +100,17 @@ public class OthelloGame {
         // space is actingPlayer, do nothing
         if (currentType == actingColor) {
             return;
+        } else {
+            actingPlayer.getPlayerOwnedSpacesSpaces().add(target);
+        }
+        // remove from opponent space if the current color is opponent color
+        if (currentType == opponentColor) {
+            opponent.getPlayerOwnedSpacesSpaces().remove(target);
         }
 
         // else, set to acting color,
         target.setType(actingColor);
 
-        // add space to acting player
-        if (!actingPlayer.getPlayerOwnedSpacesSpaces().contains(target)) {
-            actingPlayer.getPlayerOwnedSpacesSpaces().add(target);
-        }
-
-        // remove from opponent space if the current color is opponent color
-        if (currentType == opponentColor) {
-            opponent.getPlayerOwnedSpacesSpaces().remove(target);
-        }
     }
 
     /**
@@ -127,7 +130,7 @@ public class OthelloGame {
             return;
         }
 
-        // Step 1: take space fist
+        // Step 1: take space of dest first
         takeSpace(actingPlayer, opponent,
                 selectedDestination.getX(),
                 selectedDestination.getY());
