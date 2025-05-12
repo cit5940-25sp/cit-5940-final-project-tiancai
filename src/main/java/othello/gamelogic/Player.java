@@ -1,7 +1,7 @@
 package othello.gamelogic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import othello.gamelogic.BoardSpace.SpaceType;
@@ -34,7 +34,7 @@ public abstract class Player {
      * @return a map with a destination BoardSpace mapped to a List of origin BoardSpaces.
      */
     public Map<BoardSpace, List<BoardSpace>> getAvailableMoves(BoardSpace[][] board) {
-        Map<BoardSpace, List<BoardSpace>> result = new HashMap<>();
+        Map<BoardSpace, List<BoardSpace>> result = new LinkedHashMap<>();
         BoardSpace.SpaceType myColor   = getColor();
         SpaceType oppColor  = (myColor == SpaceType.BLACK
                 ? SpaceType.WHITE
