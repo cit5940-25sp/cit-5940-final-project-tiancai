@@ -39,6 +39,45 @@ public class OthelloGameTest {
     }
 
 
+    @Test
+    public void testInvalidPlayerColorsThrows() {
+        Player black1 = new ComputerPlayer("cnn");
+        black1.setColor(BoardSpace.SpaceType.BLACK);
+        Player black2 = new ComputerPlayer("cnn");
+        black2.setColor(BoardSpace.SpaceType.BLACK);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            new OthelloGame(black1, black2);
+        });
+        assertTrue(ex.getMessage().contains("Players have to have different colors"));
+    }
+
+    @Test
+    public void testInvalidPlayerColorsThrows2() {
+        Player black1 = new ComputerPlayer("cnn");
+        black1.setColor(BoardSpace.SpaceType.EMPTY);
+        Player black2 = new ComputerPlayer("cnn");
+        black2.setColor(BoardSpace.SpaceType.BLACK);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            new OthelloGame(black1, black2);
+        });
+        assertTrue(ex.getMessage().contains("Players have to choose colors"));
+    }
+
+    @Test
+    public void testInvalidPlayerColorsThrows3() {
+        Player black1 = new ComputerPlayer("cnn");
+        black1.setColor(BoardSpace.SpaceType.WHITE);
+        Player black2 = new ComputerPlayer("cnn");
+        black2.setColor(BoardSpace.SpaceType.BLACK);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            new OthelloGame(black1, black2);
+        });
+        assertTrue(ex.getMessage().contains("Player1 have to use Black"));
+    }
+
 
     @Test
     public void testTakeSpaceAddsToActingPlayer() {

@@ -18,7 +18,8 @@ public class OthelloGame {
         if (playerOne.getColor().equals(playerTwo.getColor())) {
             throw new IllegalArgumentException("Players have to have different colors");
         }
-        if (playerOne.getColor() == null || playerTwo.getColor() == null) {
+        if (playerOne.getColor() == BoardSpace.SpaceType.EMPTY
+                || playerTwo.getColor() == BoardSpace.SpaceType.EMPTY) {
             throw new IllegalArgumentException("Players have to choose colors");
         }
         if (!playerOne.getColor().equals(BoardSpace.SpaceType.BLACK)) {

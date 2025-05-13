@@ -97,9 +97,6 @@ public abstract class Player {
         return result;
     }
 
-    private boolean inBounds(int x, int y, BoardSpace[][] board) {
-        return x >= 0 && x < board.length && y >= 0 && y < board[0].length;
-    }
 
     private BoardSpace.SpaceType getOpponentColor() {
         return getColor() == BoardSpace.SpaceType.BLACK
