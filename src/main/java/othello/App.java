@@ -18,7 +18,7 @@ public class App extends javafx.application.Application {
 
     // The program arguments MUST match one of these items!
     // Edit this list to add more items!
-    private final List<String> acceptedArgs = List.of("human", "minimax", "mcts", "custom");
+    private final List<String> acceptedArgs = List.of("human", "minimax", "mcts", "cnn");
 
     @Override
     public void start(Stage stage) throws IOException {

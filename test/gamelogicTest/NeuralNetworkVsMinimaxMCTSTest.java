@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class NeuralNetworkVsMinimaxMCTSTest {
     //this is going to talk a very long time if you do 1000 times.
     //You can do it within 5 or 10 times
-    private static final int NUM_GAMES = 1000;
+    private static final int NUM_GAMES = 5;
 
     static class NNPlayer extends ComputerPlayer {
         public NNPlayer() {
