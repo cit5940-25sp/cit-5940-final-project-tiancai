@@ -125,5 +125,31 @@ public class BoardSpaceTest {
         assertEquals(2, BoardSpace.SpaceType.WHITE.ordinal());
     }
 
+    @Test
+    public void testEqualObjectsHaveSameHashCode() {
+        BoardSpace a = new BoardSpace(3, 5, BoardSpace.SpaceType.BLACK);
+        BoardSpace b = new BoardSpace(3, 5, BoardSpace.SpaceType.WHITE); // same (x,y)
+
+        assertEquals(a, b, "Objects with same x,y should be equal");
+        assertEquals(a.hashCode(), b.hashCode(), "Equal objects must have same hashCode");
+    }
+
+    @Test
+    public void testDifferentObjectsHaveDifferentHashCodes() {
+        BoardSpace a = new BoardSpace(3, 5, BoardSpace.SpaceType.BLACK);
+        BoardSpace b = new BoardSpace(4, 5, BoardSpace.SpaceType.BLACK);
+
+        // 不能强求 hashCode 不同，但我们可以期望通常不相同
+        assertNotEquals(a, b, "Different coordinates should not be equal");
+        assertNotEquals(a.hashCode(), b.hashCode(), "Likely different hashCodes for different coords");
+    }
+
+    @Test
+    public void testHashCodeConsistency() {
+        BoardSpace a = new BoardSpace(1, 2, BoardSpace.SpaceType.WHITE);
+        int hash1 = a.hashCode();
+        int hash2 = a.hashCode();
+        assertEquals(hash1, hash2, "hashCode should be consistent");
+    }
 
 }
